@@ -13,6 +13,8 @@ namespace zharov
   void readPersons(std::istream& in, Array< Person >& persons,
     size_t& accepted, size_t& ignored);
   void writePersons(std::ostream& out, const Array< Person >& persons);
+  bool parseMeetLine(const std::string& str, Meet& m);
+  bool readMeets(std::istream& in, Array< Meet >& meets);
 }
 
 #endif
