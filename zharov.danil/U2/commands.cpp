@@ -121,6 +121,10 @@ void zharov::runAnons(std::ostream& out, std::istream&, const Context& ctx)
     }
   }
   selectionSort(anons);
+  if (anons.size == 0)
+  {
+    out << "\n";
+  }
   for (size_t i = 0; i < anons.size; ++i)
   {
     out << anons.data[i] << "\n";
@@ -138,6 +142,26 @@ void zharov::runDesc(std::ostream& out, std::istream& in, const Context& ctx)
   if (!personExists(*ctx.persons, *ctx.meets, id))
   {
     throw std::invalid_argument("");
+  }
+  in >> std::ws;
+  if (in.peek() == '"')
+  {
+    in.get();
+    std::string desc;
+    std::getline(in, desc, '"');
+    for (size_t i = 0; i < ctx.persons->size; ++i)
+    {
+      if (ctx.persons->data[i].id == id)
+      {
+        ctx.persons->data[i].info = desc;
+        return;
+      }
+    }
+    Person p;
+    p.id = id;
+    p.info = desc;
+    pushBack(*ctx.persons, p);
+    return;
   }
   for (size_t i = 0; i < ctx.persons->size; ++i)
   {
@@ -164,6 +188,10 @@ void zharov::runMeets(std::ostream& out, std::istream& in, const Context& ctx)
   Array< std::pair< size_t, size_t > > entries =
     makeArray< std::pair< size_t, size_t > >(ctx.meets->size + 1);
   collectMeets(*ctx.meets, id, entries);
+  if (entries.size == 0)
+  {
+    out << "\n";
+  }
   for (size_t i = 0; i < entries.size; ++i)
   {
     out << entries.data[i].first << " " << entries.data[i].second << "\n";
@@ -217,6 +245,10 @@ void zharov::runCommons(std::ostream& out, std::istream& in, const Context& ctx)
     }
   }
   selectionSort(commons);
+  if (commons.size == 0)
+  {
+    out << "\n";
+  }
   for (size_t i = 0; i < commons.size; ++i)
   {
     out << commons.data[i] << "\n";
@@ -240,12 +272,18 @@ void zharov::runLess(std::ostream& out, std::istream& in, const Context& ctx)
   Array< std::pair< size_t, size_t > > entries =
     makeArray< std::pair< size_t, size_t > >(ctx.meets->size + 1);
   collectMeets(*ctx.meets, id, entries);
+  bool anyLess = false;
   for (size_t i = 0; i < entries.size; ++i)
   {
     if (entries.data[i].second < time)
     {
       out << entries.data[i].first << " " << entries.data[i].second << "\n";
+      anyLess = true;
     }
+  }
+  if (!anyLess)
+  {
+    out << "\n";
   }
   clear(entries);
 }
@@ -265,28 +303,40 @@ void zharov::runGreater(std::ostream& out, std::istream& in, const Context& ctx)
   Array< std::pair< size_t, size_t > > entries =
     makeArray< std::pair< size_t, size_t > >(ctx.meets->size + 1);
   collectMeets(*ctx.meets, id, entries);
+  bool anyGreater = false;
   for (size_t i = 0; i < entries.size; ++i)
   {
     if (entries.data[i].second > time)
     {
       out << entries.data[i].first << " " << entries.data[i].second << "\n";
+      anyGreater = true;
     }
+  }
+  if (!anyGreater)
+  {
+    out << "\n";
   }
   clear(entries);
 }
 
-void zharov::runOutPersons(std::ostream&, std::istream& in, const Context& ctx)
+void zharov::runOutPersons(std::ostream& out, std::istream& in, const Context& ctx)
 {
   std::string filename;
   if (!(in >> filename))
   {
     throw std::invalid_argument("");
   }
-  std::ofstream file(filename);
+  std::ofstream file(filename, std::ios::app);
   if (!file.is_open())
   {
     throw std::invalid_argument("");
   }
+  if (ctx.persons->size == 0)
+  {
+    out << "\n";
+    return;
+  }
+  writePersons(out, *ctx.persons);
   writePersons(file, *ctx.persons);
 }
 
