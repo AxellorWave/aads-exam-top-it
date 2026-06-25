@@ -3,10 +3,13 @@
 #include <string>
 #include <cstddef>
 
-struct Person
+namespace zharov
 {
-  size_t id;
-  std::string info;
-};
+  struct Person
+  {
+    size_t id;
+    std::string info;
+  };
+}
 
 #endif
