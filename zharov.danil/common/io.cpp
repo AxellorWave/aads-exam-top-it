@@ -75,3 +75,82 @@ void zharov::writePersons(std::ostream& out, const Array< Person >& persons)
     out << persons.data[i].id << " " << persons.data[i].info << "\n";
   }
 }
+
+bool zharov::parseMeetLine(const std::string& str, Meet& m)
+{
+  size_t pos = 0;
+  size_t id1 = 0;
+  size_t id2 = 0;
+  size_t duration = 0;
+  try
+  {
+    id1 = std::stoul(str, &pos);
+  }
+  catch (...)
+  {
+    return false;
+  }
+  while (pos < str.size() && (str[pos] == ' ' || str[pos] == '\t'))
+  {
+    ++pos;
+  }
+  size_t pos2 = 0;
+  try
+  {
+    id2 = std::stoul(str.substr(pos), &pos2);
+  }
+  catch (...)
+  {
+    return false;
+  }
+  pos += pos2;
+  while (pos < str.size() && (str[pos] == ' ' || str[pos] == '\t'))
+  {
+    ++pos;
+  }
+  size_t pos3 = 0;
+  try
+  {
+    duration = std::stoul(str.substr(pos), &pos3);
+  }
+  catch (...)
+  {
+    return false;
+  }
+  pos += pos3;
+  while (pos < str.size() && (str[pos] == ' ' || str[pos] == '\t'))
+  {
+    ++pos;
+  }
+  if (pos != str.size())
+  {
+    return false;
+  }
+  m.id1 = id1;
+  m.id2 = id2;
+  m.duration = duration;
+  return true;
+}
+
+bool zharov::readMeets(std::istream& in, Array< Meet >& meets)
+{
+  std::string line;
+  while (std::getline(in, line))
+  {
+    if (line.empty())
+    {
+      continue;
+    }
+    Meet m;
+    if (!parseMeetLine(line, m))
+    {
+      return false;
+    }
+    if (m.id1 == m.id2)
+    {
+      continue;
+    }
+    pushBack(meets, m);
+  }
+  return true;
+}
