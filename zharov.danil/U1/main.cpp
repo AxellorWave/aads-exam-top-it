@@ -26,11 +26,12 @@ namespace
 
 int main(int argc, char** argv)
 {
-  zharov::Array< zharov::Person > persons = zharov::makeArray< zharov::Person >(0);
+  zharov::Array< zharov::Person > persons = zharov::makeArray< zharov::Person >(10);
   if (argc > 3)
   {
     std::cerr << "Invalid arguments\n";
-    return 1;
+    zharov::clear(persons);
+    return 0;
   }
   std::string inFile;
   std::string outFile;
@@ -46,6 +47,7 @@ int main(int argc, char** argv)
       if (hasIn)
       {
         std::cerr << "Invalid arguments\n";
+        zharov::clear(persons);
         return 1;
       }
       inFile = arg.substr(3);
@@ -56,6 +58,7 @@ int main(int argc, char** argv)
       if (hasOut)
       {
         std::cerr << "Invalid arguments\n";
+        zharov::clear(persons);
         return 1;
       }
       outFile = arg.substr(4);
@@ -64,30 +67,21 @@ int main(int argc, char** argv)
     else
     {
       std::cerr << "Invalid arguments\n";
+      zharov::clear(persons);
       return 1;
     }
   }
   std::ifstream file_in;
-  std::ofstream file_out;
   if (hasIn)
   {
     file_in.open(inFile);
     if (!file_in.is_open())
     {
       std::cerr << "Cannot open file\n";
+      zharov::clear(persons);
       return 2;
     }
     in = std::addressof(file_in);
-  }
-  if (hasOut)
-  {
-    file_out.open(outFile);
-    if (!file_out.is_open())
-    {
-      std::cerr << "Cannot open file\n";
-      return 2;
-    }
-    out = std::addressof(file_out);
   }
 
   size_t accepted = 0;
@@ -95,6 +89,10 @@ int main(int argc, char** argv)
   std::string line;
   while (std::getline(*in, line))
   {
+    if (line.empty())
+    {
+      continue;
+    }
     zharov::Person p;
     if (!zharov::parseLine(line, p))
     {
@@ -109,7 +107,28 @@ int main(int argc, char** argv)
     zharov::pushBack(persons, p);
     ++accepted;
   }
-  *out << accepted << " " << ignored << "\n";
+  std::ofstream file_out;
+  if (hasOut)
+  {
+    file_out.open(outFile);
+    if (!file_out.is_open())
+    {
+      std::cerr << "Cannot open file\n";
+      zharov::clear(persons);
+      return 2;
+    }
+    out = std::addressof(file_out);
+  }
+  for (size_t i = 0; i < persons.size; ++i)
+  {
+    *out << persons.data[i].id << " " << persons.data[i].info << "\n";
+  }
+  if (persons.size == 0)
+  {
+    *out << "\n";
+  }
+  std::cerr << accepted << " " << ignored << "\n";
+  zharov::clear(persons);
 }
 
 
@@ -125,7 +144,7 @@ bool zharov::parseLine(const std::string& str, Person& p)
   {
     return false;
   }
-  while (pos < str.size() && str[pos] == ' ')
+  while (pos < str.size() && (str[pos] == ' ' || str[pos] == '\t'))
   {
     ++pos;
   }
