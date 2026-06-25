@@ -35,8 +35,6 @@ namespace zharov
   template< class T >
   void pushBack(Array< T >& arr, const T& val);
 
-  template< class T, class Pred >
-  bool has(const Array< T >& arr, Pred pred);
 }
 
 template< class T >
@@ -143,19 +141,6 @@ template< class T >
 void zharov::pushBack(Array< T >& arr, const T& val)
 {
   insert(arr, arr.size, val);
-}
-
-template< class T, class Pred >
-bool zharov::has(const Array< T >& arr, Pred pred)
-{
-  for (size_t i = 0; i < arr.size; ++i)
-  {
-    if (pred(arr.data[i]))
-    {
-      return true;
-    }
-  }
-  return false;
 }
 
 #endif
