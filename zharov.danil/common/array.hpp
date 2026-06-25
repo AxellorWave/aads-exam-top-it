@@ -30,9 +30,6 @@ namespace zharov
   void insert(Array< T >& arr, size_t pos, const T& val);
 
   template< class T >
-  void remove(Array< T >& arr, size_t pos);
-
-  template< class T >
   void pushBack(Array< T >& arr, const T& val);
 
 }
@@ -102,31 +99,6 @@ void zharov::insert(Array< T >& arr, size_t pos, const T& val)
     }
     tmp.data[pos] = val;
     ++tmp.size;
-  }
-  catch (...)
-  {
-    clear(tmp);
-    throw;
-  }
-  swap(arr, tmp);
-  clear(tmp);
-}
-
-template< class T >
-void zharov::remove(Array< T >& arr, size_t pos)
-{
-  if (pos >= arr.size)
-  {
-    throw std::out_of_range("remove: pos out of range");
-  }
-  Array< T > tmp = copy(arr);
-  try
-  {
-    for (size_t i = pos; i + 1 < tmp.size; ++i)
-    {
-      tmp.data[i] = tmp.data[i + 1];
-    }
-    --tmp.size;
   }
   catch (...)
   {
