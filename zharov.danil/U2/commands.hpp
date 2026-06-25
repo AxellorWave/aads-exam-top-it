@@ -14,16 +14,18 @@ namespace zharov
   };
 
   using Cmd = void (*)(std::ostream&, std::istream&, Context&);
+  using ConstCmd = void (*)(std::ostream&, std::istream&, const Context&);
 
-  void cmdAnons(std::ostream&, std::istream&, Context&);
-  void cmdDeanon(std::ostream&, std::istream&, Context&);
-  void cmdRedesc(std::ostream&, std::istream&, Context&);
-  void cmdDesc(std::ostream&, std::istream&, Context&);
-  void cmdMeets(std::ostream&, std::istream&, Context&);
-  void cmdCommons(std::ostream&, std::istream&, Context&);
-  void cmdLess(std::ostream&, std::istream&, Context&);
-  void cmdGreater(std::ostream&, std::istream&, Context&);
-  void cmdOutPersons(std::ostream&, std::istream&, Context&);
+  void runAnons(std::ostream&, std::istream&, const Context&);
+  void runDesc(std::ostream&, std::istream&, const Context&);
+  void runMeets(std::ostream&, std::istream&, const Context&);
+  void runCommons(std::ostream&, std::istream&, const Context&);
+  void runLess(std::ostream&, std::istream&, const Context&);
+  void runGreater(std::ostream&, std::istream&, const Context&);
+  void runOutPersons(std::ostream&, std::istream&, const Context&);
+
+  void runDeanon(std::ostream&, std::istream&, Context&);
+  void runRedesc(std::ostream&, std::istream&, Context&);
 }
 
 #endif
