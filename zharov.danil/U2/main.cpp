@@ -83,18 +83,18 @@ int main(int argc, char** argv)
 
   zharov::HashTable< std::string, zharov::Cmd > cmds =
     zharov::makeHashTable< std::string, zharov::Cmd >(8);
-  zharov::insert(cmds, "deanon", zharov::runDeanon);
-  zharov::insert(cmds, "redesc", zharov::runRedesc);
+  zharov::insert< std::string, zharov::Cmd >(cmds, std::string("deanon"), zharov::runDeanon);
+  zharov::insert< std::string, zharov::Cmd >(cmds, std::string("redesc"), zharov::runRedesc);
 
   zharov::HashTable< std::string, zharov::ConstCmd > constCmds =
     zharov::makeHashTable< std::string, zharov::ConstCmd >(16);
-  zharov::insert(constCmds, "anons", zharov::runAnons);
-  zharov::insert(constCmds, "desc", zharov::runDesc);
-  zharov::insert(constCmds, "meets", zharov::runMeets);
-  zharov::insert(constCmds, "commons", zharov::runCommons);
-  zharov::insert(constCmds, "less", zharov::runLess);
-  zharov::insert(constCmds, "greater", zharov::runGreater);
-  zharov::insert(constCmds, "out-persons", zharov::runOutPersons);
+  zharov::insert< std::string, zharov::ConstCmd >(constCmds, std::string("anons"), zharov::runAnons);
+  zharov::insert< std::string, zharov::ConstCmd >(constCmds, std::string("desc"), zharov::runDesc);
+  zharov::insert< std::string, zharov::ConstCmd >(constCmds, std::string("meets"), zharov::runMeets);
+  zharov::insert< std::string, zharov::ConstCmd >(constCmds, std::string("commons"), zharov::runCommons);
+  zharov::insert< std::string, zharov::ConstCmd >(constCmds, std::string("less"), zharov::runLess);
+  zharov::insert< std::string, zharov::ConstCmd >(constCmds, std::string("greater"), zharov::runGreater);
+  zharov::insert< std::string, zharov::ConstCmd >(constCmds, std::string("out-persons"), zharov::runOutPersons);
 
   zharov::Context ctx{std::addressof(persons), std::addressof(meets)};
 
